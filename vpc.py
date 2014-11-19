@@ -97,10 +97,10 @@ class SubnetTemplate(object):
         return (
             '{}.{}.0/24'.format(SUBNET_BASE, x)
             for x in xrange(
-            self.base_subnet_offset,
-            self.base_subnet_offset + len(AVAILABILITY_ZONES)
+                self.base_subnet_offset,
+                self.base_subnet_offset + len(AVAILABILITY_ZONES)
+            )
         )
-    )
 
     def _create_subnets(self):
         # create a subnet in every assigned AZ
@@ -368,7 +368,7 @@ def subnet_templates():
     #: prod subnets start at CIDR /16
     start = 0
     #: the max number of availability zones per subnet
-    step = 5
+    step = 10
 
     return (
         SubnetTemplate('nat',
@@ -380,29 +380,29 @@ def subnet_templates():
                        Networking.DNS,
                        role='nat'),
 
-        # api (oltp requests)
-        SubnetTemplate('oltp',
-                       start + step,
-                       role='oltp'),
-
-        # workers (offline requests)
-        SubnetTemplate('offline',
-                       start + (step * 2),
-                       role='offline'),
-
-        # infra (datastores etc)
-        SubnetTemplate('infra',
-                       start + (step * 3),
-                       role='infra'),
-
         # DMZ (internet facing traffic)
         # This does not route via the NATs, traffic goes directly to these
         # instances. Use this for ELBs and single servers that directly handle
         # traffic.
         SubnetTemplate('dmz',
-                       start + (step * 4),
+                       start + step * 1,
                        role='dmz',
                        routing_table='natRoutingTable'),
+
+        # api (oltp requests)
+        SubnetTemplate('oltp',
+                       start + step * 2,
+                       role='oltp'),
+
+        # workers (offline requests)
+        SubnetTemplate('offline',
+                       start + (step * 3),
+                       role='offline'),
+
+        # infra (datastores etc)
+        SubnetTemplate('infra',
+                       start + (step * 4),
+                       role='infra'),
 
     )
 
