@@ -443,7 +443,7 @@ VPNGateway = t.add_resource(ec2.VPNGateway(
     'VPNGateway',
     Type='ipsec.1',
     Tags=Tags(
-        Name=Join('-', Ref('AWS::StackName'), 'VPNGateway'),
+        Name=Join('-', [Ref('AWS::StackName'), 'VPNGateway']),
         Application=Ref('AWS::StackName'),
     )
 ))
