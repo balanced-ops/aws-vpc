@@ -433,6 +433,7 @@ VPC = t.add_resource(ec2.VPC(
     CidrBlock=Ref(vpc_cidr),
     EnableDnsHostnames='true',
     Tags=Tags(
+        Name=Ref('AWS::StackName'),
         Application=Ref('AWS::StackName'),
         Network='VPN Connected VPC',
     )
@@ -442,6 +443,7 @@ VPNGateway = t.add_resource(ec2.VPNGateway(
     'VPNGateway',
     Type='ipsec.1',
     Tags=Tags(
+        Name=Join('-', Ref('AWS::StackName'), 'VPNGateway'),
         Application=Ref('AWS::StackName'),
     )
 ))
